@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_bloc_tutorial/counter_bloc.dart';
+import 'package:my_bloc_tutorial/news_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: NewsPage(),
     );
   }
 }
@@ -26,7 +27,14 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final counterBloc = CounterBloc();
+
   _MyHomePageState();
+  @override
+  void dispose() {
+    counterBloc.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,15 +50,21 @@ class _MyHomePageState extends State<MyHomePage> {
                   stream: counterBloc.counterStream,
                   initialData: 0,
                   builder: (context, snapshot) {
-                    return Center(
-                      child: Text(
-                        "${snapshot.data}",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 50.0,
-                            color: Colors.red),
-                      ),
-                    );
+                    if (snapshot.hasData)
+                      return Center(
+                        child: Text(
+                          "${snapshot.data}",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 50.0,
+                              color: Colors.red),
+                        ),
+                      );
+                    if (snapshot.hasError) {
+                      print(snapshot.error);
+                    }
+
+                    return Container();
                   }),
             ),
             Expanded(
