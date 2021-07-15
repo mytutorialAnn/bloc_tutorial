@@ -16,6 +16,7 @@ class CounterBloc {
 
   CounterBloc() {
     counter = 0;
+    //counterStream.listen((event) {});
     eventStream.listen((event) {
       if (event == CounterAction.Increment) {
         counter++;
@@ -27,5 +28,10 @@ class CounterBloc {
 
       counterSink.add(counter);
     });
+  }
+
+  void dispose() {
+    _stateStreamController.close();
+    _eventStreamController.close();
   }
 }
